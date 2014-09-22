@@ -220,10 +220,11 @@ typedef structure {
 typedef string BarSeqExperimentID;
 
 /*
-  Number of times a barcode (i.e. a strain) was detected by sequencing a pool given GrowthParameters, 
-  and a calculated log ratio of strain abundance relative to a starting condition.  
+  Number of times a barcode (i.e. a strain) was detected by sequencing a pool at beginning (refernce state)
+  and at the end of GrowthParameters, and a calculated log ratio of strain abundance relative to a starting
+  condition.  
 */
-typedef tuple<StrainID,GrowthParametersID,long,float> BarSeqResult;
+typedef tuple<StrainID,GrowthParametersID,long,long,float> BarSeqResult;
 
 /*
   BarSeqExperimentResults stores the log ratios calculated from
