@@ -151,13 +151,64 @@ typedef structure {
 typedef string GrowthParametersID;
 
 /*
+  A TnSeqExperiment is an experiment in which a pool of mutants is created 
+  by a transposone mutagenesis.
+*/
+typedef structure {
+	string name;
+	PoolID pool_id;
+	string start_date;
+	string sequenced_at;
+	GrowthParametersID growth_parameter;
+} TnSeqExperiment;
+
+/*
+@id ws KBaseGrowthPhenotype.TnSeqExperiment
+*/
+typedef string TnSeqExperimentID;
+
+/*
+  Number of strains determined from sequencing of TnSeq library.
+*/
+typedef tuple<StrainID,long> TnSeqResult;
+
+/*
+  TnSeqExperimentResults stores the results of sequencing of a TnSeq experiment, i.e. 
+  number of times each mutant strain is detetcted from sequencing.
+*/
+typedef structure {
+	TnSeqExperimentID experiment_id;
+	list<TnSeqResult> results;
+} TnSeqExperimentResults;
+
+/*
+@id ws KBaseGrowthPhenotype.TnSeqExperimentResults
+*/
+typedef string TnSeqExperimentResultsID;
+
+/*
+  TnSeqLibrary is a filtered subset of strains from TnSeqExperimentResults that is 
+  suitable for the subsequent analysis of BarSeq experiments.
+*/
+typedef structure {
+	TnSeqExperimentResultsID experiment_results_id;
+	list<TnSeqResult> results;
+} TnSeqLibrary;
+
+/*
+@id ws KBaseGrowthPhenotype.TnSeqLibrary
+*/
+typedef string TnSeqLibraryID;
+
+
+/*
   A BarSeqExperiment is an experiment in which a pool is grown in
   several parallel aliquots (e.g., wells or tubes), each potentially
   treated with a different set of conditions
 */
 typedef structure {
     string name;
-    PoolID pool_id;
+    TnSeqLibraryID tnseq_library_id;
     string start_date;
     string sequenced_at;
     list<GrowthParametersID> growth_parameters;
@@ -169,9 +220,10 @@ typedef structure {
 typedef string BarSeqExperimentID;
 
 /*
-  There is one log ratio calculated per Strain per GrowthParameters
+  Number of times a barcode (i.e. a strain) was detected by sequencing a pool given GrowthParameters, 
+  and a calculated log ratio of strain abundance relative to a starting condition.  
 */
-typedef tuple<StrainID,GrowthParametersID,float> BarSeqResult;
+typedef tuple<StrainID,GrowthParametersID,long,float> BarSeqResult;
 
 /*
   BarSeqExperimentResults stores the log ratios calculated from
