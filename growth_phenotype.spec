@@ -3,7 +3,7 @@ This module is for storing microbial growth phenotype data, e.g., from
 FEBA or ENIGMA
 */
 
-module KBaseGrowthPhenotype {
+module KBaseKnockoutGrowthPhenotype {
     
 /*
 @id ws KBaseGenomes.Genome
@@ -64,7 +64,7 @@ typedef structure {
 } Delta;
 
 /*
-@id ws KBaseGrowthPhenotype.Strain
+@id ws KBaseKnockoutGrowthPhenotype.Strain
 */
 typedef string StrainID;
 
@@ -91,7 +91,7 @@ typedef structure {
 } Strain;
 
 /*
-@id ws KBaseGrowthPhenotype.Pool
+@id ws KBaseKnockoutGrowthPhenotype.Pool
 */
 typedef string PoolID;
 
@@ -146,7 +146,7 @@ typedef structure {
 } GrowthParameters;
 
 /*
-@id ws KBaseGrowthPhenotype.GrowthParameters
+@id ws KBaseKnockoutGrowthPhenotype.GrowthParameters
 */
 typedef string GrowthParametersID;
 
@@ -163,7 +163,7 @@ typedef structure {
 } TnSeqExperiment;
 
 /*
-@id ws KBaseGrowthPhenotype.TnSeqExperiment
+@id ws KBaseKnockoutGrowthPhenotype.TnSeqExperiment
 */
 typedef string TnSeqExperimentID;
 
@@ -182,7 +182,7 @@ typedef structure {
 } TnSeqExperimentResults;
 
 /*
-@id ws KBaseGrowthPhenotype.TnSeqExperimentResults
+@id ws KBaseKnockoutGrowthPhenotype.TnSeqExperimentResults
 */
 typedef string TnSeqExperimentResultsID;
 
@@ -196,7 +196,7 @@ typedef structure {
 } TnSeqLibrary;
 
 /*
-@id ws KBaseGrowthPhenotype.TnSeqLibrary
+@id ws KBaseKnockoutGrowthPhenotype.TnSeqLibrary
 */
 typedef string TnSeqLibraryID;
 
@@ -215,7 +215,7 @@ typedef structure {
 } BarSeqExperiment;
 
 /*
-@id ws KBaseGrowthPhenotype.BarSeqExperiment
+@id ws KBaseKnockoutGrowthPhenotype.BarSeqExperiment
 */
 typedef string BarSeqExperimentID;
 
