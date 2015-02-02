@@ -71,11 +71,11 @@ typedef string strain_ref;
     * sequenced
     * isolated from a community
     * a wild-type example of a Genome
-  If a strain is "wild type" it should have a non-null genome_id and a
-  null derived_from_strain.  If not wild type, genome_id should be
+  If a strain is "wild type" it should have a non-null genome_ref and a
+  null derived_from_strain.  If not wild type, genome_ref should be
   set to the "original" parent strain in KBase, if it exists, or null
   if it does not exist or is unknown.
-@optional description genome_id derived_from_strain deltas isolated_from
+@optional description genome_ref derived_from_strain deltas isolated_from
 */
 typedef structure {
     string name;
@@ -102,24 +102,24 @@ typedef structure {
     list<Strain> strains;
 } Pool;
 
-
 /*
-	Reference to a compound object in a biochemistry
-	@id subws KBaseBiochem.Biochemistry.compounds.[*].id
+ Reference to a compound object in a biochemistry
+ @id subws KBaseBiochem.Biochemistry.compounds.[*].id
 */
 typedef string compound_ref;
     
 /*
   A Condition is something that's added to particular aliquots in
   a growth experiment, in addition to the media.  e.g., it may be a stress
-  condition, or a nutrient.
+  condition, or a nutrient.  Compound is needed if the condition is
+  addition of a chemical in the KBase Biochemistry database.
 @optional concentration units compound
 */
 typedef structure {
     string name;
     float concentration;
     string units;
-    compund_ref compound;
+    compound_ref compound;
 } Condition;
 
 /*
@@ -143,8 +143,8 @@ typedef structure {
     string group;
     float temperature;
     float pH;
-    Boolean isLiquid;
-    Boolean isAerobic;
+    bool isLiquid;
+    bool isAerobic;
     string shaking;
     string growth_plate_id;
     string growth_plate_wells;
@@ -163,11 +163,11 @@ typedef string growth_parameters_ref;
   by a transposone mutagenesis.
 */
 typedef structure {
-	string name;
-	pool_ref pool;
-	string start_date;
-	string sequenced_at;
-	growth_parameters_id growth_parameter;
+    string name;
+    pool_ref pool;
+    string start_date;
+    string sequenced_at;
+    growth_parameters_id growth_parameters;
 } TnSeqExperiment;
 
 /*
@@ -180,15 +180,15 @@ typedef string tnseq_experiment_ref;
   strain_index - index of a strain in Pool.strains list
   count - number of instances of the strain identified from sequencing
 */
-typedef tuple<long strain_index,long count> tnseq_result;
+typedef tuple<int strain_index,int count> tnseq_result;
 
 /*
   TnSeqExperimentResults stores the results of sequencing of a TnSeq experiment, i.e. 
   number of times each mutant strain is detetcted from sequencing.
 */
 typedef structure {
-	tnseq_experiment_ref experiment;
-	list<tnseq_result> results;
+    tnseq_experiment_ref experiment;
+    list<tnseq_result> results;
 } TnSeqExperimentResults;
 
 /*
@@ -202,8 +202,8 @@ typedef string tnseq_experiment_results_ref;
   tnseq_results_index - index to TnSeqExperimentResults.results
 */
 typedef structure {
-	tnseq_experiment_results_ref experiment;
-	list<long tnseq_results_index> selected_lib;
+    tnseq_experiment_results_ref experiment;
+    list<int tnseq_results_index> selected_lib;
 } TnSeqLibrary;
 
 /*
@@ -240,7 +240,7 @@ typedef string barseq_experiment_ref;
   count_end - at the end of experiment
   norm_log_ratio - normalized log ratio between count_end and count_begin
 */
-typedef tuple<long strain_index,long count_begin,long count_end,float norm_log_ratio> bar_seq_result;
+typedef tuple<int strain_index,int count_begin,int count_end,float norm_log_ratio> bar_seq_result;
 
 /*
   BarSeqExperimentResults stores the log ratios calculated from
