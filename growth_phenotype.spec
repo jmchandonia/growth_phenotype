@@ -3,44 +3,40 @@ This module is for storing microbial growth phenotype data, e.g., from
 FEBA or ENIGMA
 */
 
-module KBaseKnockoutGrowthPhenotype {
+module KBaseRBTnSeq {
     
 /*
 @id ws KBaseGenomes.Genome
 */
-typedef string GenomeID;
+typedef string genome_ref;
 
 /*
 @id ws KBaseGenomes.Contig;
 */
-typedef string ContigID;
+typedef string contig_ref;
 
 /*
 @id ws KBaseCommunities.Sample;
 */
-typedef string SampleID;
+typedef string sample_ref;
 
 /*
 @id ws KBaseBiochem.Media;
 */
-typedef string MediaID;
+typedef string media_ref;
 
 /*
-should this be linked to KBaseGenomes.Feature with an @id tag?
+	Reference to a Feature object of a genome in the workspace
+	@id subws KBaseGenomes.Genome.features.[*].id
 */
-typedef string FeatureID;
-
-/*
-Not sure if this is still needed; must be 0 or 1
-*/
-typedef int Boolean;
+typedef string feature_ref;
 
 /*
 enum: insertion, deletion, substitution
 The latter is not strictly necessary, but convenient to avoid storing
 two separate events.
 */
-typedef string ChangeType;
+typedef string change_type;
 
 /*
   A Delta is a description of a single change to a strain.  A series
@@ -51,22 +47,22 @@ typedef string ChangeType;
   position and length.  The position of all Deltas should be
   calculated relative to the parent strain (derived_from_strain), so
   that the Deltas could be applied in any order.
-@optional change_type feature_id contig_id sequence position length
+@optional change_type feature_ref contig_ref sequence position length
 */
 typedef structure {
     string description;
-    ChangeType change_type;
-    FeatureID feature_id;
-    ContigID contig_id;
+    change_type change;
+    feature_ref feature;
+    contig_ref contig;
     string sequence;
     int position;
     int length;
 } Delta;
 
 /*
-@id ws KBaseKnockoutGrowthPhenotype.Strain
+@id ws KBaseRBTnSeq.Strain
 */
-typedef string StrainID;
+typedef string strain_ref;
 
 /*
   A Strain is a particular genetic variant of an organism.  Optionally,
@@ -84,16 +80,16 @@ typedef string StrainID;
 typedef structure {
     string name;
     string description;
-    GenomeID genome_id;
-    StrainID derived_from_strain;
+    genome_ref genome;
+    strain_ref derived_from_strain;
     list<Delta> deltas;
-    SampleID isolated_from;
+    sample_ref isolated_from;
 } Strain;
 
 /*
-@id ws KBaseKnockoutGrowthPhenotype.Pool
+@id ws KBaseRBTnSeq.Pool
 */
-typedef string PoolID;
+typedef string pool_ref;
 
 /*
   A Pool is a collection of barcoded strains.  Barcodes, tags, etc should
@@ -106,17 +102,30 @@ typedef structure {
     list<Strain> strains;
 } Pool;
 
+
+/*
+	Reference to a compound object in a biochemistry
+	@id subws KBaseBiochem.Biochemistry.compounds.[*].id
+*/
+typedef string compound_ref;
+    
 /*
   A Condition is something that's added to particular aliquots in
   a growth experiment, in addition to the media.  e.g., it may be a stress
   condition, or a nutrient.
-@optional concentration units
+@optional concentration units compound
 */
 typedef structure {
     string name;
     float concentration;
     string units;
+    compund_ref compound;
 } Condition;
+
+/*
+@id ws KBaseRBTnSeq.Condition
+*/
+typedef string condition_ref;
 
 /*
   GrowthParameters describes all the conditions a particular aliquot
@@ -129,7 +138,7 @@ typedef structure {
     string gDNA_plate;
     string gDNA_well;
     string index;
-    MediaID media_id;
+    media_ref media;
     string growth_method;
     string group;
     float temperature;
@@ -137,7 +146,6 @@ typedef structure {
     Boolean isLiquid;
     Boolean isAerobic;
     string shaking;
-    list<Condition> conditions;
     string growth_plate_id;
     string growth_plate_wells;
     float startOD;
@@ -146,9 +154,9 @@ typedef structure {
 } GrowthParameters;
 
 /*
-@id ws KBaseKnockoutGrowthPhenotype.GrowthParameters
+@id ws KBaseRBTnSeq.GrowthParameters
 */
-typedef string GrowthParametersID;
+typedef string growth_parameters_ref;
 
 /*
   A TnSeqExperiment is an experiment in which a pool of mutants is created 
@@ -156,49 +164,52 @@ typedef string GrowthParametersID;
 */
 typedef structure {
 	string name;
-	PoolID pool_id;
+	pool_ref pool;
 	string start_date;
 	string sequenced_at;
-	GrowthParametersID growth_parameter;
+	growth_parameters_id growth_parameter;
 } TnSeqExperiment;
 
 /*
-@id ws KBaseKnockoutGrowthPhenotype.TnSeqExperiment
+@id ws KBaseRBTnSeq.TnSeqExperiment
 */
-typedef string TnSeqExperimentID;
+typedef string tnseq_experiment_ref;
 
 /*
   Number of strains determined from sequencing of TnSeq library.
+  strain_index - index of a strain in Pool.strains list
+  count - number of instances of the strain identified from sequencing
 */
-typedef tuple<StrainID,long> TnSeqResult;
+typedef tuple<long strain_index,long count> tnseq_result;
 
 /*
   TnSeqExperimentResults stores the results of sequencing of a TnSeq experiment, i.e. 
   number of times each mutant strain is detetcted from sequencing.
 */
 typedef structure {
-	TnSeqExperimentID experiment_id;
-	list<TnSeqResult> results;
+	tnseq_experiment_ref experiment;
+	list<tnseq_result> results;
 } TnSeqExperimentResults;
 
 /*
-@id ws KBaseKnockoutGrowthPhenotype.TnSeqExperimentResults
+@id ws KBaseRBTnSeq.TnSeqExperimentResults
 */
-typedef string TnSeqExperimentResultsID;
+typedef string tnseq_experiment_results_ref;
 
 /*
   TnSeqLibrary is a filtered subset of strains from TnSeqExperimentResults that is 
   suitable for the subsequent analysis of BarSeq experiments.
+  tnseq_results_index - index to TnSeqExperimentResults.results
 */
 typedef structure {
-	TnSeqExperimentResultsID experiment_results_id;
-	list<TnSeqResult> results;
+	tnseq_experiment_results_ref experiment;
+	list<long tnseq_results_index> selected_lib;
 } TnSeqLibrary;
 
 /*
-@id ws KBaseKnockoutGrowthPhenotype.TnSeqLibrary
+@id ws KBaseRBTnSeq.TnSeqLibrary
 */
-typedef string TnSeqLibraryID;
+typedef string tnseq_library_ref;
 
 
 /*
@@ -208,23 +219,28 @@ typedef string TnSeqLibraryID;
 */
 typedef structure {
     string name;
-    TnSeqLibraryID tnseq_library_id;
+    tnseq_library_ref tnseq_library;
     string start_date;
     string sequenced_at;
-    list<GrowthParametersID> growth_parameters;
+    growth_parameters_ref growth_parameters;
+    list<condition_ref> conditions;
 } BarSeqExperiment;
 
 /*
-@id ws KBaseKnockoutGrowthPhenotype.BarSeqExperiment
+@id ws KBaseRBTnSeq.BarSeqExperiment
 */
-typedef string BarSeqExperimentID;
+typedef string barseq_experiment_ref;
 
 /*
   Number of times a barcode (i.e. a strain) was detected by sequencing a pool at beginning (refernce state)
   and at the end of GrowthParameters, and a calculated log ratio of strain abundance relative to a starting
-  condition.  
+  condition.
+  strain_index - index of a strain in Pool.strains list
+  count_begin - number of instances of the strain identified from sequencing at the beginning of experiment
+  count_end - at the end of experiment
+  norm_log_ratio - normalized log ratio between count_end and count_begin
 */
-typedef tuple<StrainID,GrowthParametersID,long,long,float> BarSeqResult;
+typedef tuple<long strain_index,long count_begin,long count_end,float norm_log_ratio> bar_seq_result;
 
 /*
   BarSeqExperimentResults stores the log ratios calculated from
@@ -232,8 +248,8 @@ typedef tuple<StrainID,GrowthParametersID,long,long,float> BarSeqResult;
   GrowthParameters.
 */
 typedef structure {
-    BarSeqExperimentID experiment_id;
-    list<BarSeqResult> results;
+    barseq_experiment_ref experiment;
+    list<bar_seq_result> results;
 } BarSeqExperimentResults;
 
 }
