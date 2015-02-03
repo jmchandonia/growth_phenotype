@@ -252,4 +252,37 @@ typedef structure {
     list<bar_seq_result> results;
 } BarSeqExperimentResults;
 
+/*
+@id ws KBaseRBTnSeq.BarSeqExperimentResults
+*/
+typedef string barseq_experiment_results_ref;
+
+/*
+  Computes essential genes from a TnSeq pool
+  Input: tnseq_library_ref - reference to a TnSeqLibrary
+  Output: list of genes 
+*/
+funcdef essential_genes(tnseq_library_ref) returns (list<feature_ref gene>) authentication required;
+
+/*
+  Computes essential genes from a BarSeq experiment
+  Input: barseq_experiment_results_ref - reference to a BarSeqExperimentResults object
+  Output: list of genes 
+*/
+funcdef essential_genes(barseq_experiment_results_ref) returns (list<feature_ref gene>) authentication required;
+
+/*
+  Computes gene fitness within a TnSeq pool
+  Input: tnseq_library_ref - reference to a TnSeqLibrary
+  Output: list of genes with their fitness
+*/
+funcdef gene_fitness(tnseq_library_ref) returns (list<tuple<feature_ref gene, float fitness>>) authentication required;
+
+/*
+  Computes gene fitness from a BarSeq experiment
+  Input: barseq_experiment_results_ref - reference to a BarSeqExperimentResults object
+  Output: list of genes with their fitness
+*/
+funcdef gene_fitness(barseq_experiment_results_ref) returns (list<tuple<feature_ref gene, float fitness>>) authentication required;
+
 }
